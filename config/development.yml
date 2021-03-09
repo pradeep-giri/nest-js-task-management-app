@@ -1,8 +1,8 @@
 db:
-  host: 'localhost'
-  username: 'postgres'
-  password: 'Gaytridetwal@123'
+  host: 'rosie.db.elephantsql.com'
+  username: 'oijnmbpz'
+  password: 'wN7Zj_p8-BTOmgaJlMHlTC4TMVgZfMUD'
   synchronize: true
 
 jwt:
-  secret: 'Holosuit'
+  secret: 'AbCdEfGhIjKlMnOpQrStUvWxYz'
