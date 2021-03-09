@@ -13,6 +13,13 @@ import {
   ValidationPipe,
 } from '@nestjs/common';
 import { AuthGuard } from '@nestjs/passport';
+import {
+  ApiBearerAuth,
+  ApiBody,
+  ApiParam,
+  ApiQuery,
+  ApiTags,
+} from '@nestjs/swagger';
 import { GetUser } from 'src/auth/get-user.decorator';
 import { User } from 'src/auth/user.entity';
 import { CreateTaskDto } from './dto/create-task.dto';
@@ -28,6 +35,10 @@ export class TasksController {
   constructor(private tasksService: TasksService) {}
 
   @Get()
+  @ApiTags('task')
+  @ApiBearerAuth()
+  @ApiQuery({ name: 'status', enum: TaskStatus, required: false })
+  @ApiQuery({ name: 'search', required: false })
   getTasks(
     @Query(ValidationPipe) filterDto: GetTasksFilterDto,
     @GetUser() user: User,
@@ -36,6 +47,12 @@ export class TasksController {
   }
 
   @Get(':id')
+  @ApiTags('task')
+  @ApiBearerAuth()
+  @ApiParam({
+    name: 'id',
+    type: 'number',
+  })
   getTaskById(
     @Param('id', ParseIntPipe) id: number,
     @GetUser() user: User,
@@ -44,6 +61,16 @@ export class TasksController {
   }
 
   @Post()
+  @ApiTags('task')
+  @ApiBearerAuth()
+  @ApiBody({
+    schema: {
+      example: {
+        title: 'This is title',
+        description: 'This is description',
+      },
+    },
+  })
   @UsePipes(ValidationPipe)
   createTask(
     @GetUser() user: User,
@@ -53,6 +80,12 @@ export class TasksController {
   }
 
   @Delete(':id')
+  @ApiTags('task')
+  @ApiBearerAuth()
+  @ApiParam({
+    name: 'id',
+    type: 'number',
+  })
   deleteTaskById(
     @Param('id', ParseIntPipe) id: number,
     @GetUser() user: User,
@@ -61,6 +94,19 @@ export class TasksController {
   }
 
   @Patch(':id/status')
+  @ApiTags('task')
+  @ApiBearerAuth()
+  @ApiParam({
+    name: 'id',
+    type: 'number',
+  })
+  @ApiBody({
+    schema: {
+      example: {
+        status: 'IN_PROGRESS',
+      },
+    },
+  })
   updateTask(
     @Param('id', ParseIntPipe) id: number,
     @Body('status', TaskStatusValidationPipe) status: TaskStatus,
